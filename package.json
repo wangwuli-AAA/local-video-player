@@ -1,0 +1,21 @@
+{
+  "name": "local-video-player",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "仅在本机运行的中文视频播放器",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "start": "node server.mjs",
+    "test": "node --test test/*.test.mjs"
+  },
+  "dependencies": {
+    "artplayer": "5.4.0",
+    "express": "5.1.0"
+  },
+  "devDependencies": {
+    "jsdom": "30.1.3"
+  }
+}

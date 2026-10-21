@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#f6f4ee">
+  <title>本地放映室</title>
+  <link rel="stylesheet" href="/style.css">
+  <script src="/vendor/artplayer.js" defer></script>
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <aside class="sidebar">
+    <a class="brand" href="/" aria-label="本地放映室首页"><span class="brand-icon">▶</span><span>本地放映室<small>YOUR PRIVATE CINEMA</small></span></a>
+    <section class="sidebar-card navigation-card" aria-labelledby="library-heading">
+      <h2 id="library-heading" class="nav-caption">我的资料库</h2>
+      <nav aria-label="资料库导航">
+        <button class="nav-item active" id="all-nav"><span aria-hidden="true">▦</span>全部视频<b id="all-count">0</b></button>
+        <button class="nav-item" id="history-nav"><span aria-hidden="true">◷</span>最近观看<b id="history-count">0</b></button>
+      </nav>
+      <div class="sidebar-divider"></div>
+      <h2 class="nav-caption" id="management-heading">管理</h2>
+      <nav aria-labelledby="management-heading">
+        <button class="nav-item" id="sources-nav"><span aria-hidden="true">▱</span>视频来源</button>
+        <button class="nav-item" id="jobs-nav"><span aria-hidden="true">⇄</span>转换任务<b id="jobs-count">0</b></button>
+        <button class="nav-item" id="cache-nav"><span aria-hidden="true">◫</span>缓存管理</button>
+      </nav>
+    </section>
+    <section class="sidebar-card folder-section" aria-labelledby="folder-heading">
+      <h2 id="folder-heading" class="nav-caption">文件夹</h2>
+      <nav id="folder-tree" class="folder-tree" aria-label="视频文件夹目录"></nav>
+    </section>
+    <div class="sidebar-foot"><span class="status-dot"></span>仅在这台电脑上运行<p>你的文件，你的观看时光。</p><span class="version">LOCAL / 1.0</span></div>
+  </aside>
+
+  <main>
+    <header class="page-header">
+      <div><p class="eyebrow">A LITTLE TIME, JUST FOR YOU</p><h1 id="page-title">我的放映室<span class="title-dot">.</span></h1><p class="subtitle" id="page-subtitle">打开一段视频，接着上次的故事。</p></div>
+      <button class="primary" id="add-button"><span>＋</span> 添加视频</button>
+    </header>
+
+    <section id="player-section" class="player-panel" hidden aria-label="视频播放器">
+      <div class="player-top"><div><p class="eyebrow">NOW PLAYING</p><h2 id="playing-title"></h2></div><div class="player-window-actions"><button class="quiet" id="expand-player" aria-pressed="false" aria-controls="player-section" title="铺满右侧，保留左侧目录">右侧铺满 ⛶</button><button class="quiet" id="close-player">收起播放器 ×</button></div></div>
+      <div id="player" class="player" hidden></div>
+      <div id="playback-state" class="playback-state" role="status"></div>
+      <div class="player-bottom"><span id="playing-info"></span><div class="inline-actions"><button class="quiet" id="restart-button" hidden>从头播放</button><button class="quiet" id="convert-button" hidden>转换后播放</button><button class="quiet danger" id="cancel-button" hidden>取消转换</button></div></div>
+    </section>
+
+    <section class="continue-panel" id="continue-panel" hidden>
+      <div class="continue-visual" aria-hidden="true"><span>▶</span></div>
+      <div class="continue-copy"><p class="eyebrow">PICK UP WHERE YOU LEFT OFF</p><h2 id="continue-title"></h2><p id="continue-meta"></p><div class="progress-track"><i id="continue-progress"></i></div></div>
+      <button class="secondary" id="continue-button">继续播放 <span>↗</span></button>
+    </section>
+
+    <section class="library" aria-label="视频列表">
+      <div class="library-toolbar"><div class="library-heading"><h2 id="list-title">全部视频</h2><span class="count-pill" id="list-count">0 部</span></div><div class="toolbar-actions"><label class="search"><span aria-hidden="true">⌕</span><input id="search" type="search" placeholder="搜索视频名称…" aria-label="搜索视频名称"></label><button class="icon-button" id="refresh-button" title="重新扫描文件夹" aria-label="刷新列表">↻</button></div></div>
+      <div id="empty-state" class="empty-state" hidden><div class="empty-art" aria-hidden="true"><div class="film-frame"><span>▶</span></div><span class="art-spark">✳</span></div><p class="eyebrow">MAKE ROOM FOR A GOOD STORY</p><h2 id="empty-title">第一场放映，从这里开始</h2><p id="empty-description">添加本地视频或文件夹，观看进度会替你记住。</p><button class="secondary" id="empty-add">＋ 添加我的视频</button></div>
+      <div id="video-list" class="video-list"></div>
+      <footer class="library-footer"><span>保留每一次暂停，方便下一次开始。</span><span>本地存储 · 无需联网</span></footer>
+    </section>
+    <div id="notice" class="notice" role="status" aria-live="polite" hidden></div>
+  </main>
+
+  <dialog id="sources-dialog" aria-labelledby="sources-title">
+    <div class="dialog-header"><div><p class="eyebrow">YOUR VIDEO SOURCES</p><h2 id="sources-title">添加视频</h2></div><button class="icon-button" data-close="sources-dialog" aria-label="关闭">×</button></div>
+    <p class="dialog-description">文件留在原来的位置。添加文件夹时，会一并扫描子文件夹。</p>
+    <div class="picker-buttons"><button class="secondary" id="pick-folder">▱ 选择文件夹</button><button class="secondary" id="pick-file">＋ 选择视频文件</button></div>
+    <form id="path-form"><label class="field-label" for="paths">或粘贴完整路径<span>每行一个文件或文件夹</span></label><textarea id="paths" rows="3" placeholder="D:\视频\我的收藏&#10;D:\课程\第一课.mp4"></textarea><div class="form-bottom"><span id="import-state" role="status"></span><button class="primary" id="import-button" type="submit">添加并扫描</button></div></form>
+    <div class="section-divider"></div><h3>已添加的来源</h3><p class="small-note">移除来源只停止后续扫描；视频记录和原文件都会保留。</p><div id="source-list" class="source-list"></div>
+  </dialog>
+
+  <dialog id="jobs-dialog" aria-labelledby="jobs-title"><div class="dialog-header"><div><p class="eyebrow">FORMAT CONVERSION</p><h2 id="jobs-title">转换任务</h2></div><button class="icon-button" data-close="jobs-dialog" aria-label="关闭">×</button></div><p class="dialog-description">同时转换一个视频。完成后的缓存可以直接复用，不会修改原文件。</p><div id="job-list"></div></dialog>
+
+  <dialog id="cache-dialog" aria-labelledby="cache-title"><div class="dialog-header"><div><p class="eyebrow">A LITTLE HOUSEKEEPING</p><h2 id="cache-title">缓存管理</h2></div><button class="icon-button" data-close="cache-dialog" aria-label="关闭">×</button></div><p class="dialog-description">仅保存为兼容浏览器而生成的视频副本。</p><div class="cache-summary"><strong id="cache-size">—</strong><span id="cache-files">正在统计</span></div><p class="small-note">清理会取消转换并停止当前播放。观看记录和原视频不受影响；下次需要时会重新转换。</p><button class="secondary danger" id="clear-cache">清理所有转换缓存</button></dialog>
+</body>
+</html>

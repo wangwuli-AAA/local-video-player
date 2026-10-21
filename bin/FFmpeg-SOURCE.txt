@@ -1,0 +1,4 @@
+﻿Downloaded: https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-essentials.zip
+SHA256: 60F467265B1E312373DBCD92200C2618A74850F98D3D078E94296BB3FA2047BA
+Build information and corresponding source: https://www.gyan.dev/ffmpeg/builds/
+Upstream: https://ffmpeg.org/ (GPL build; see FFmpeg-LICENSE.txt)
